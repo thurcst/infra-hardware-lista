@@ -1,23 +1,23 @@
 .data
-    a: .word 5
+    a: .word 5                                             #declaração de variaveis 
     b: .word 4
     m: .word 12
 
 .text
 
-    lw a1 a
+    lw a1 a                                                #carregando variaveis do tipo WORD   
     lw a2 b
     lw a3 m
 
 
-    add a3 a1 x0
+    add a3 a1 x0                                           #operação de soma
 
-    beq a2, a3, subtracao # if t0 == t1 then target
+    beq a2, a3, subtracao # if t0 == t1 then target        #comparação de igualdade de registradores e em seguida o que ira fazer
 
-    subtracao:
+    subtracao:                                             #função de subtração
      sub a3 a2 a1
 
-    bne a2, a3, subtracao2 # if a2 != a3 then subtracao2
+    bne a2, a3, subtracao2 # if a2 != a3 then subtracao2   #comparação de diferença de registradores e em seguida o que ira fazer
 
-    subtracao2:
+    subtracao2:                                            #função de subtração 2
      sub a3 a1 a2
