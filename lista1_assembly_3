@@ -1,0 +1,38 @@
+.data
+    stringzada:     .asciiz "ZECA_CORNO"
+	fim:            .word 0
+	a:              .asciiz "A"
+    e:              .asciiz "E"
+    i:              .asciiz "I"
+    o:              .asciiz "O"
+    u:              .asciiz "U"
+
+    contador:       .word 0
+
+.text
+    lb s2, a
+    lb s3, e
+    lb s4, i
+    lb s5, o
+    lb s6, u
+    lw a7, contador 
+    lw a6, fim
+    la x9, stringzada
+ 
+   
+    run:
+ 		lb x12 0 x9
+ 		beq x12, a6, final 
+        beq x12, s2, sum # if x12 =a1t1 comp_e;arget
+        beq x12, s3, sum
+        beq x12, s4, sum
+        beq x12, s5, sum
+        beq x12, s6, sum
+        addi x9 x9 1
+        beq zero,zero, run
+    sum:
+        addi a7, a7, 1
+        addi x9 x9 1
+        beq zero, zero, run
+
+    final:
