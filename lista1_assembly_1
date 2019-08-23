@@ -1,0 +1,23 @@
+.data
+    a: .word 5
+    b: .word 4
+    m: .word 12
+
+.text
+
+    lw a1 a
+    lw a2 b
+    lw a3 m
+
+
+    add a3 a1 x0
+
+    beq a2, a3, subtracao # if t0 == t1 then target
+
+    subtracao:
+     sub a3 a2 a1
+
+    bne a2, a3, subtracao2 # if a2 != a3 then subtracao2
+
+    subtracao2:
+     sub a3 a1 a2

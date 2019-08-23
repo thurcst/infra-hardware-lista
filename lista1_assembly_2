@@ -1,0 +1,33 @@
+.data
+    a: .word 1
+    b: .word 2
+    c: .word 20
+    x: .word 4
+    meia_quatro: .word 64
+    vinte_cinco: .word 25
+
+.text
+    lw a1, a
+    lw a2, b
+    lw a3, c
+	lw a4, x
+    lw a5, meia_quatro
+    lw a6, vinte_cinco
+
+    add a4 x0 x0
+    
+    bge a1, x0, lesser_than # if t0 >= t1 then target
+	beq zero, zero, fim
+    
+    lesser_than:
+        ble a2, a5, greater_than # if t0 <= t1 then target
+        beq zero, zero, fim
+        
+    greater_than:
+        bge a3, a6, change_x # if t0 >= t1 then target
+        beq zero, zero, fim
+
+    change_x:    
+        addi a4 a4 1
+    
+    fim:
