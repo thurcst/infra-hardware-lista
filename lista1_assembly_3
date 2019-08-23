@@ -1,28 +1,28 @@
-.data
-    stringzada:     .asciiz "ZECA_CORNO"
-	fim:            .word 0
-	a:              .asciiz "A"
-    e:              .asciiz "E"
-    i:              .asciiz "I"
-    o:              .asciiz "O"
-    u:              .asciiz "U"
+.data 						#declarações de vaiaveis
+    stringzada:     .asciiz "ZECA_CORNO" 	#string é no formato "asciiz"
+    fim:            .word 0 		        #'0' representa o EOF(EOT)
+    a:              .asciiz "A" 		# vogais para comparar
+    e:              .asciiz "E"			# vogais para comparar
+    i:              .asciiz "I"			# vogais para comparar
+    o:              .asciiz "O"			# vogais para comparar
+    u:              .asciiz "U"			# vogais para comparar
 
-    contador:       .word 0
+    contador:       .word 0			#contador inicializado como zero
 
-.text
-    lb s2, a
+.text						#O codigo em si
+    lb s2, a					#carrega o caracter de 1 byte(char)
     lb s3, e
     lb s4, i
     lb s5, o
     lb s6, u
-    lw a7, contador 
+    lw a7, contador 				#carrega o caracter de 4 bytes
     lw a6, fim
-    la x9, stringzada
+    la x9, stringzada				#carrega o endereco da stringzada
  
    
-    run:
- 		lb x12 0 x9
- 		beq x12, a6, final 
+    run:					#label  = é o apelido da linha. 
+	lb x12 0 x9			#as linhas seguintes(24-32) percorrem a string e verificam se o caracter do indice é igual a...
+	beq x12, a6, final 
         beq x12, s2, sum # if x12 =a1t1 comp_e;arget
         beq x12, s3, sum
         beq x12, s4, sum
@@ -30,7 +30,7 @@
         beq x12, s6, sum
         addi x9 x9 1
         beq zero,zero, run
-    sum:
+    sum:					#incrementam no indice e na variavel auxiliar 		
         addi a7, a7, 1
         addi x9 x9 1
         beq zero, zero, run
