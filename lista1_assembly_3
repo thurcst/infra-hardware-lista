@@ -1,7 +1,7 @@
-.data 						#declarações de vaiaveis
+.data 						                #declarações de vaiaveis
     stringzada:     .asciiz "ZECA_CORNO" 	#string é no formato "asciiz"
     fim:            .word 0 		        #'0' representa o EOF(EOT)
-    a:              .asciiz "A" 		# vogais para comparar
+    a:              .asciiz "A" 		    # vogais para comparar
     e:              .asciiz "E"			# vogais para comparar
     i:              .asciiz "I"			# vogais para comparar
     o:              .asciiz "O"			# vogais para comparar

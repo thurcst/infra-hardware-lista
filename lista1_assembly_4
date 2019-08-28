@@ -1,0 +1,42 @@
+.data
+    stringinha:         .asciiz "oro oro"
+    comeco:              .word 0
+    final:             .word 0
+    fim_string:         .word 0
+
+.text
+    lw x11, comeco
+    lw x12, final
+    la x9, stringinha
+    lw x8, fim_string
+
+
+    run:
+        lb x11 0 x9 #referencial do comeco
+    
+    
+    while:
+        lb x12 0 x9 #referencial do final
+        beq x12, x8, next_step # if x12 == x8 then next_step
+        addi x9, x9, 1; # x12 = x12 + 1
+    
+    next_step:
+        addi x9 x9 -1
+        lb x12 0 x9 #referencial do a2
+
+    compare_registers:
+        
+        bne x11, x12, print_n; # if x11 != x12 then target
+        beq zero zero reducao_reg
+
+    reducao_reg:
+        bge x11, x12, print_s # if t0 >= t1 then target
+        addi x11 0 1
+        addi x12 0 -1
+        beq zero zero compare_registers
+    
+    print_n:
+        addi a0 a0 0
+    
+    print_s:
+        addi a0 a0 1
