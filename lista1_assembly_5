@@ -1,8 +1,9 @@
 .data
     player_A:           .asciiz "ZECA"
-    player_B:           .asciiz "ARTHUR"
+    player_B:           .asciiz "ZECA"
     comeco_grupo:       .word 0
-    grupo:            .asciiz "AEIOUNRSDGTBCMPFHVWYKJLXQZ"
+    grupo:            	.asciiz "AEIOUNRSDGTBCMPFHVWYKJLXQZ"
+    acabou:             .word 0
     # Valor 1 de 0 a 7, valor 2 de 8 a 10, valor 3 de 11 a 14 
     # Valor 4 de 15 a 19, valor 5 pra 20, valor 8 de 21 a 23, valor 10 de 24 a 25
     resultado_total:     .asciiz 0  
@@ -24,22 +25,20 @@
 
 
 .text
-     
     la s2, grupo                          	# Primeiro le o grupo um
     lw t6, contador
     lw t3, contador_2
     lb t2 ,resultado_total
     lw a6, resultado_A                      # Contador do resultado de A
     lw a7, resultado_B                      # Contador do resultado de B
-    lb x19, A								# Valor da letra A
-    lb x20, B								# Valor da letra B
-    lb x21, E								# Valor da letra E
-    lw x22, seven
-    lw x23, ten
-    lw x24, fourteen
-    lw x25, nineteen
-    lw x26, twenty
-    lw x27, twenty_three
+    lb s3, A								# Valor da letra A
+    lb s4, B
+    lw s6, seven
+    lw s7, ten
+    lw s8, fourteen
+    lw s9, nineteen
+    lw s10, twenty
+    lw s11, twenty_three
     lw x28,twenty_five
     lw t0, flag								# Flag pra identificar se é turno do player A ou B
 
@@ -54,19 +53,19 @@
         beq zero, zero, while				# Pula pro While
 
     COMECA_STRING_B:
-        la s1, player_B                     # String do player 2
-        lb a3, 0, s1                	    # a4 recebe primeira letra da string_B
+        la s0, player_B                     # String do player 2
+        lb a3, 0, s0                	    # a3 recebe primeira letra da string_B
         addi t0, t0, 1						# Flag recebe 1 que é turno da B
         beq zero, zero, while				# Volta pro While
 
     while:
-    	beq a3, x0, CHECA_FLAG				# Se a3 ( letra da string A ) for igual a 0 é fim de string, deve trocar pra B
+    	beq a3, x0, CHECA_FLAG				# Se a3 ( letra da string A ) for igual a . é fim de string, deve trocar pra B
         bne a3, a5, PROXIMA_LETRA_GRUPO     # Se a3 não for igual a a5 ( Letra do grupo ), próxima letra
         beq a3, a5, PONTO_REG_ATUAL			# Se a3 for igual, ponto pra o que tá apontado na flag
 
     PROXIMA_LETRA_GRUPO:
-        addi t6, t6, 1 						# Contador de letras percorridas++
         beq a5, x0, PROXIMA_LETRA_STRING_P2 # Se a5 for igual a 0, o grupo acabou, deve pular pra próxima letra do jogador
+        addi t6, t6, 1 						# Contador de letras percorridas++
         addi s2, s2, 1						# Soma uma posição na letra do grupo
         lb a5, 0, s2						# Recarrega a string do grupo uma posição pra direita
        	beq zero, zero, while				# Volta pro while
@@ -86,12 +85,13 @@
         xor t6, t6, t6                              # Limpa o t6, pra começar a contar do começo de novo
         beq s0, x0, COMECA_STRING_B                 # Se o s0 já tá no final, começa a string B
         addi s0, s0, 1
-        la s0, player_A # 
         lb a3, 0, s0                                # a3 recebe primeira letra da string_A
         beq zero, zero, while
     
 
     PONTO_REG_ATUAL:
+    	addi s0, s0, 1
+        lb a3, 0, s0 
         beq t0, x0, PONTO_A                         # Se a flag for 0, é ponto do A
         bne t0, x0, PONTO_B                         # Se for 1, ponto do B
 
@@ -100,8 +100,8 @@
         beq zero, zero, RESULTADO                   # se já for 1, é só checar o resultado
     
     RESULTADO: 
-        blt x20, x19, PRINTA_RESULTADO_A              # se B é menor que A, printa que A ganhou
-        beq x19, x20, PRINTA_RESULTADO_EMPATE         # Se B é igual a A, empatou
+        blt a7, a6, PRINTA_RESULTADO_A              # se B é menor que A, printa que A ganhou
+        beq a6, a7, PRINTA_RESULTADO_EMPATE         # Se B é igual a A, empatou
         beq zero, zero, PRINTA_RESULTADO_B
     
     PONTO_A:
@@ -117,53 +117,56 @@
         beq zero zero EXIT
     
     PRINTA_RESULTADO_EMPATE:
+
+        lb s3, E								# Valor da letra E
         add t2, x0, x21
         beq zero zero EXIT
 
     PRINTA_RESULTADO_B:
+        lb s3, B								# Valor da letra B
         add t2, x0, x19
         beq zero zero EXIT
     
     GRUPO_1:
         xor t3, t3, t3
         addi t3, zero, 1
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
         
     GRUPO_2:
         xor t3, t3, t3
         addi t3, zero, 2
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
 
     GRUPO_3:
         xor t3, t3, t3
         addi t3, zero, 3
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
 
     GRUPO_4:
         xor t3, t3, t3
         addi t3, zero, 4
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
 
     GRUPO_5:
         xor t3, t3, t3
         addi t3, zero, 5
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
 
     GRUPO_6:
         xor t3, t3, t3
         addi t3, zero, 8
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
 
     GRUPO_7:
         xor t3, t3, t3
         addi t3, zero, 10
-        beq t6, x0, PONTO_A
+        beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
     EXIT:
 
