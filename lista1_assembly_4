@@ -1,15 +1,16 @@
 .data
     stringinha:         .asciiz "orr o"
-    comeco:              .word 0
-    final:             .word 0
+    comeco:             .word 0
+    final:              .word 0
     fim_string:         .word 0
-
+	space: 				.asciiz " "
 .text
     la x11, comeco
     la x12, final
     la x9, stringinha
     lw x8, fim_string
     la x7, stringinha
+    lb x6, space
 	xor a0, a0, a0
 
     run:
@@ -30,8 +31,18 @@
     compare_registers:
         lb x12 0 x9 #
         lb x11 0 x7 #
+        beq x11, x6, up_left
+        beq x12, x6, down_right
         bne x11, x12, print_n # if x11 != x12 then target
         beq zero zero reducao_reg
+
+    up_left:
+        addi x7 x7 1
+        beq zero, zero, compare_registers
+
+    down_right:
+        addi x9 x9 -1
+        beq zero, zero, compare_registers
 
     reducao_reg:
         bge x7, x9, print_s # if t0 >= t1 then target
