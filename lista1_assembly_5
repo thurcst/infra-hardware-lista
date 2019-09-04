@@ -1,6 +1,6 @@
 .data
     player_A:           .asciiz "ZECA"
-    player_B:           .asciiz "ZECA"
+    player_B:           .asciiz "ARTHUR"
     comeco_grupo:       .word 0
     grupo:            	.asciiz "AEIOUNRSDGTBCMPFHVWYKJLXQZ"
     acabou:             .word 0
@@ -25,22 +25,24 @@
 
 
 .text
-    la s2, grupo                          	# Primeiro le o grupo um
-    lw t6, contador
-    lw t3, contador_2
-    lb t2 ,resultado_total
     lw a6, resultado_A                      # Contador do resultado de A
     lw a7, resultado_B                      # Contador do resultado de B
+    
+    lw t0, flag								# Flag pra identificar se é turno do player A ou B(0 turno do player 1 e 1 turno do player 2)
+    lb t2 ,resultado_total
+    lw t3, contador_2                       # Contador de up que vai receber o resultado_X
+    lw t4 ,twenty_five                      # Registrador que guarda o valor 25
+    lw t6, contador                         # Conta quantas letras foram percorridas na string
+    
+    la s2, grupo                          	# Primeiro le o grupo um
     lb s3, A								# Valor da letra A
-    lb s4, B
-    lw s6, seven
-    lw s7, ten
-    lw s8, fourteen
-    lw s9, nineteen
-    lw s10, twenty
-    lw s11, twenty_three
-    lw x28,twenty_five
-    lw t0, flag								# Flag pra identificar se é turno do player A ou B
+    lb s4, B                                # Valor da letra B
+    lw s6, seven                            # Registrador que guarda o valor 7
+    lw s7, ten                              # Registrador que guarda o valor 10
+    lw s8, fourteen                         # Registrador que guarda o valor 14
+    lw s9, nineteen                         # Registrador que guarda o valor 19
+    lw s10, twenty                          # Registrador que guarda o valor 20
+    lw s11, twenty_three                    # Registrador que guarda o valor 23
 
     run:
         lb a5, 0, s2                        # a5 recebe primeira letra do grupo_X
@@ -59,8 +61,8 @@
         beq zero, zero, while				# Volta pro While
 
     while:
-    	beq a3, x0, CHECA_FLAG				# Se a3 ( letra da string A ) for igual a . é fim de string, deve trocar pra B
-        bne a3, a5, PROXIMA_LETRA_GRUPO     # Se a3 não for igual a a5 ( Letra do grupo ), próxima letra
+    	beq a3, x0, CHECA_FLAG				# Se a3 ( letra da string A ) for igual a 0 é fim de string, deve trocar pra B
+        bne a3, a5, PROXIMA_LETRA_GRUPO     # Se a3 não for igual a a5 ( Letra do grupo ), próxima letra do grupo
         beq a3, a5, PONTO_REG_ATUAL			# Se a3 for igual, ponto pra o que tá apontado na flag
 
     PROXIMA_LETRA_GRUPO:
@@ -80,7 +82,7 @@
         ble t6, x28, GRUPO_7
 
     PROXIMA_LETRA_STRING_P2:        
-        la s2, grupo                                # Se acabou o grupo, recarrega a string
+        la s2, grupo                                # Se acabou o grupo, recarrega a string do grupo(volta pro comeco da string)
         lb a5, 0, s2                                # a5 recebe primeira letra do grupo_X
         xor t6, t6, t6                              # Limpa o t6, pra começar a contar do começo de novo
         beq s0, x0, COMECA_STRING_B                 # Se o s0 já tá no final, começa a string B
@@ -117,8 +119,7 @@
         beq zero zero EXIT
     
     PRINTA_RESULTADO_EMPATE:
-
-        lb s3, E								# Valor da letra E
+        lb s3, E								# Valor da letra E //um ponto errado
         add t2, x0, x21
         beq zero zero EXIT
 
@@ -168,6 +169,7 @@
         addi t3, zero, 10
         beq t0, x0, PONTO_A
         beq zero, zero, PONTO_B
+
     EXIT:
 
     
