@@ -1,49 +1,48 @@
 .data
-    word:                   .asciiz "riscv"
     string:                 .asciiz "xrnrclszumskvbqchuwtgyvieip"
-    contador:               .word 0
-    apontador_word:         .word 0
-    apontador_string:       .word 0
-    valor_total:            .word 5
-    pontuacao:              .word 0
+    word:                   .asciiz "riscv"
 
-.text
-    la a1, word
-    la a2, string
-    addi a7,zero, 35
-    #la a3, apontador_word
-    #la a4, apontador_string
-    lb t0, contador
-    lb a6, valor_total
-    lb a0, pontuacao
+    .text
+        add     a0, zero, zero          # Resposta
+        la      a1, word                # Endereço string 1
+        la      a2, string              # Endereço string 2
+        addi    a6, zero, 5             # Limite de 5 letras(riscv)
+        addi    a7, zero, 35            # Caractere
+        add     s1, a1, zero            # String 1, pos: 0
+        add     s2, a2, zero            # String 2, pos: 0
+        add     s10, zero, zero         # Contador
 
     run:
-        lb a3, 0(a1)                # a1 aponta pra palavra riscv
-        lb a4, 0(a2)                # a2 aponta pra string de letras aleatórias
-        beq a4, x0, end             # Se chegar no final, não há mais letras iguais
-        beq a3, a4, sub_hash        # Se a3 for igual a a4
-        addi a2, a2, 1
-        beq x0, x0, run
+        lb a3, (0)a1                    # a1 aponta pra palavra riscv
+        lb a4, (0)a2                    # a2 aponta pra string de letras aleatórias
+        beq a3, zero, reinicia
+        beq a4, zero, end               # Se chegar no final, não há mais letras iguais
+        beq a3, a4, sub_hash            # Se a3 for igual a a4
+        addi a2, a2, 1                  # Pula pra próxima letra
+        beq x0, x0, run                 # Reinicia função
 
-    sub_hash:   
-        xor a3,a3,a3                    # Zera a3 (posicao atual em word)
-        add a3, zero, a7               # Coloca um # na posicao a3
-        addi t0, t0, 1                  # Soma no contador de letras iguais
-        beq t0, a6, ponto_carai
-        beq a3, x0, restart             # Se chegar na ultima posição de word, reinicia
-        addi a1, a1, 1                  # Pula uma posicao na word riscv
-        beq zero, zero, run
+    sub_hash:
+        sb a7, (0)a2                    # Coloca um # na posicao a3
+        add a2, s2, zero                # Próxima letra
+        addi s10, s10, 1                # Temporário++
+        beq s10, a6, ponto_carai        # +1 Ponto pra letra
+        beq a1, x0, restart             # Se chegar na ultima posição de word, reinicia
+        addi a1, a1, 1                  # Soma no contador de letras iguais
+        beq zero, zero, run             # Volta pra Run
 
     ponto_carai:
-        la a2, string
-        lb a4, 0(a2)                # a2 aponta pra string de letras aleatórias
-        addi a0, a0, 1
-        xor t0, t0, t0
-        beq zero,zero,run
+        lb a4, (0)a2                    # a2 aponta pra string de letras aleatórias
+        addi a0, a0, 1                  # Contador++
+        xor s10,s10,s10                 # Zera contador temporário
+        beq zero,zero,run               # Volta pra Run
+    
+    reinicia:
+        add a1, s1, zero                # Reinicia string 1
+        beq zero, zero, run             # Volta pra run
 
     restart:
-        la a1, word
-        la a1, string
-        xor t0,t0,t0
-        beq zero,zero, run
-    end:
+        add a1, s1, zero                # Volta pra inicio da a1 e a2
+        add a2, s2, zero
+        xor s10,s10,s10
+        beq zero, zero, run
+end:
