@@ -1,0 +1,49 @@
+.data
+    word:                   .asciiz "riscv"
+    string:                 .asciiz "xrnrclszumskvbqchuwtgyvieip"
+    contador:               .word 0
+    apontador_word:         .word 0
+    apontador_string:       .word 0
+    valor_total:            .word 5
+    pontuacao:              .word 0
+
+.text
+    la a1, word
+    la a2, string
+    addi a7,zero, 35
+    #la a3, apontador_word
+    #la a4, apontador_string
+    lb t0, contador
+    lb a6, valor_total
+    lb a0, pontuacao
+
+    run:
+        lb a3, 0(a1)                # a1 aponta pra palavra riscv
+        lb a4, 0(a2)                # a2 aponta pra string de letras aleatórias
+        beq a4, x0, end             # Se chegar no final, não há mais letras iguais
+        beq a3, a4, sub_hash        # Se a3 for igual a a4
+        addi a2, a2, 1
+        beq x0, x0, run
+
+    sub_hash:   
+        xor a3,a3,a3                    # Zera a3 (posicao atual em word)
+        add a3, zero, a7               # Coloca um # na posicao a3
+        addi t0, t0, 1                  # Soma no contador de letras iguais
+        beq t0, a6, ponto_carai
+        beq a3, x0, restart             # Se chegar na ultima posição de word, reinicia
+        addi a1, a1, 1                  # Pula uma posicao na word riscv
+        beq zero, zero, run
+
+    ponto_carai:
+        la a2, string
+        lb a4, 0(a2)                # a2 aponta pra string de letras aleatórias
+        addi a0, a0, 1
+        xor t0, t0, t0
+        beq zero,zero,run
+
+    restart:
+        la a1, word
+        la a1, string
+        xor t0,t0,t0
+        beq zero,zero, run
+    end:
